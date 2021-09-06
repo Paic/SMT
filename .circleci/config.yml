@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  build:  
+    docker:
+      - image: microsoft/dotnet:latest
+    steps:
+      - checkout
+      - run:
+          name: Infos
+          command: |
+            pwd && ls -lah
+      - run:
+          working_directory: ~/project/App.Tests
+          name: Build
+          command: |
+            dotnet build
+            
+
+workflows:
+  sample: 
+    jobs:
+      - build
