@@ -15,7 +15,7 @@ jobs:
             - dotnet-packages-v1-{{ checksum "SMT/SMT.csproj" }}
       - run:
           name: "Install project dependencies"
-          command: dotnet.exe restore
+          command: dotnet.exe restore -s https://www.nuget.org/
       - save_cache:
           paths:
             - C:\Users\circleci\.nuget\packages
@@ -23,6 +23,9 @@ jobs:
       - run:
           name: "Print Working Directory"
           command: pwd
+      - run:
+          name: "Print Nuget Package"
+          command: dir C:\Users\circleci\.nuget\packages
       - run:
           name: "Build Application according to some given configuration"
           command: dotnet.exe build --configuration Release
