@@ -1,23 +1,32 @@
 version: 2.1
 
+orbs:
+  windows: circleci/windows@2.4.1
+
 jobs:
-  build:  
-    docker:
-      - image: microsoft/dotnet:latest
+  build:
+    description: Setup and build application with Release configuration
+    executor:
+      name: windows/default
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - dotnet-packages-v1-{{ checksum "SMT/SMT.csproj" }}
       - run:
-          name: Infos
-          command: |
-            pwd && ls -lah
+          name: "Install project dependencies"
+          command: dotnet.exe restore
+      - save_cache:
+          paths:
+            - C:\Users\circleci\.nuget\packages
+          key: dotnet-packages-v1-{{ checksum "SMT/SMT.csproj" }}
       - run:
-          working_directory: ~/project/App.Tests
-          name: Build
-          command: |
-            dotnet build
-            
-
+          name: "Print Working Directory"
+          command: pwd
+      - run:
+          name: "Build Application according to some given configuration"
+          command: dotnet.exe build --configuration Release
 workflows:
-  sample: 
+  build:
     jobs:
       - build
